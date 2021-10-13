@@ -582,7 +582,7 @@ def detection_targets_graph(proposals, gt_class_ids, gt_boxes, gt_masks, config)
 
     # Compute mask targets
     boxes = positive_rois
-    if config.USE_MINI_MASK:
+    if self.config.USE_MINI_MASK:
         # Transform ROI coordinates from normalized image space
         # to normalized mini-mask space.
         y1, x1, y2, x2 = tf.split(positive_rois, 4, axis=1)
