@@ -550,7 +550,7 @@ def detection_targets_graph(proposals, gt_class_ids, gt_boxes, gt_masks, config)
     # Positive ROIs
     positive_count = int(config.TRAIN_ROIS_PER_IMAGE *
                          config.ROI_POSITIVE_RATIO)
-    positive_indices = tf.random_shuffle(positive_indices)[:positive_count]
+    positive_indices = tf.random_stateshuffle(positive_indices)[:positive_count]
     positive_count = tf.shape(positive_indices)[0]
     # Negative ROIs. Add enough to maintain positive:negative ratio.
     r = 1.0 / config.ROI_POSITIVE_RATIO
@@ -2361,7 +2361,7 @@ class MaskRCNN():
         if os.name is 'nt':
             workers = 0
         else:
-            workers = multiprocessing.cpu_count()
+            workers = 1
 
         self.keras_model.fit_generator(
             train_generator,
@@ -2369,7 +2369,8 @@ class MaskRCNN():
             steps_per_epoch=self.config.STEPS_PER_EPOCH,
             callbacks=callbacks,
             validation_data=val_generator,
-            validation_steps=self.config.VALIDATION_STEPS
+            validation_steps=self.config.VALIDATION_STEPS,
+            multiprocessing=False
         )
         self.epoch = max(self.epoch, epochs)
 
